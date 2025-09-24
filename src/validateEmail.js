@@ -2,18 +2,46 @@
 
 /**
  * @param {string} email
- *
  * @returns {boolean}
  */
 function validateEmail(email) {
-  // eslint-disable-next-line
-  const validEmailMask = new RegExp(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\./i);
+  const parts = email.split('@');
 
-  if (email.match(validEmailMask)) {
-    return true;
+  if (parts.length !== 2) {
+    return false;
   }
 
-  return false;
+  const [personal, domain] = parts;
+
+  if (!personal || personal.startsWith('.') || personal.endsWith('.')) {
+    return false;
+  }
+
+  if (/\.{2,}/.test(personal)) {
+    return false;
+  }
+
+  if (!/^[A-Za-z0-9._-]+$/.test(personal)) {
+    return false;
+  }
+
+  if (/[!$%&'*+/=?^{}|~]/.test(personal)) {
+    return false;
+  }
+
+  if (!domain || domain.startsWith('.') || domain.endsWith('.')) {
+    return false;
+  }
+
+  if (!/^[A-Za-z0-9.-]+$/.test(domain)) {
+    return false;
+  }
+
+  if (!domain.includes('.')) {
+    return false;
+  }
+
+  return true;
 }
 
 module.exports = validateEmail;
