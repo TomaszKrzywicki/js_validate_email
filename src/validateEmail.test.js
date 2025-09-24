@@ -17,7 +17,7 @@ describe(`Function 'validateEmail':`, () => {
       't@q.c',
       'user.name_123@domain.com',
       'a-b_c.d@sub.domain.com',
-      'user@mail.com.' // końcowa kropka w domenie jest dozwolona
+      'user@mail.com.', // końcowa kropka w domenie jest dozwolona
     ];
 
     validEmails.forEach(email => {
@@ -35,6 +35,7 @@ describe(`Function 'validateEmail':`, () => {
 
     // zakazane znaki w personal_info
     const forbiddenChars = "!$%&'*+/=?^{}|~";
+
     forbiddenChars.split('').forEach(char => {
       expect(validateEmail(`user${char}name@mail.com`)).toBeFalsy();
     });
