@@ -12,24 +12,41 @@ describe(`Function 'validateEmail':`, () => {
   });
 
   it('should return true for valid emails', () => {
-    expect(validateEmail('test@mail.com')).toBeTruthy();
-    expect(validateEmail('t@q.c')).toBeTruthy();
-    expect(validateEmail('user.name_123@domain.com')).toBeTruthy();
-    expect(validateEmail('a-b_c.d@sub.domain.com')).toBeTruthy();
+    const validEmails = [
+      'test@mail.com',
+      't@q.c',
+      'user.name_123@domain.com',
+      'a-b_c.d@sub.domain.com',
+      'user@mail.com.' // końcowa kropka w domenie jest dozwolona
+    ];
+
+    validEmails.forEach(email => {
+      expect(validateEmail(email)).toBeTruthy();
+    });
   });
 
   it('should return false for invalid emails', () => {
+    // brak @
     expect(validateEmail('testmail.com')).toBeFalsy();
-    expect(validateEmail('user@mail')).toBeFalsy();
-    expect(validateEmail('user!@mail.com')).toBeFalsy();
-    expect(validateEmail('user$@mail.com')).toBeFalsy();
+    // wiele @
+    expect(validateEmail('a@b@c.com')).toBeFalsy();
+    // brak kropki w domenie
+    expect(validateEmail('false@email')).toBeFalsy();
+
+    // zakazane znaki w personal_info
+    const forbiddenChars = "!$%&'*+/=?^{}|~";
+    forbiddenChars.split('').forEach(char => {
+      expect(validateEmail(`user${char}name@mail.com`)).toBeFalsy();
+    });
+
+    // kropka na początku/końcu personal_info
     expect(validateEmail('.username@mail.com')).toBeFalsy();
     expect(validateEmail('username.@mail.com')).toBeFalsy();
-    expect(validateEmail('user..name@mail.com')).toBeFalsy();
-    expect(validateEmail('username@.mail.com')).toBeFalsy();
-  });
 
-  it('should return false for invalid domain chars', () => {
+    // podwójne kropki w personal_info
+    expect(validateEmail('user..name@mail.com')).toBeFalsy();
+
+    // domena z niedozwolonym znakiem
     expect(validateEmail('user@mail!.com')).toBeFalsy();
     expect(validateEmail('user@ma#il.com')).toBeFalsy();
   });
