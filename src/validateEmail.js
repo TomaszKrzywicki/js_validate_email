@@ -21,11 +21,8 @@ function validateEmail(email) {
     return false;
   }
 
+  // allow-list regex wystarczy, więc nie trzeba sprawdzać forbidden chars
   if (!/^[A-Za-z0-9._-]+$/.test(personal)) {
-    return false;
-  }
-
-  if (/[!$%&'*+/=?^{}|~]/.test(personal)) {
     return false;
   }
 
